@@ -1,3 +1,7 @@
+<p align="right">
+  <strong>简体中文</strong> | <a href="./README_en.md"><strong>English</strong></a>
+</p>
+
 # 🛡️ huawei-app-review
 
 **华为应用市场审核合规指南与避坑指南 Skill (Huawei AppGallery Review Skill)**
@@ -10,6 +14,8 @@
 
 > **让 AI 编程助手在写鸿蒙代码的第一天，就避开所有华为应用市场审核驳回红线。**
 > 面向 Claude Code、Cursor、Gemini CLI、Antigravity 等 AI 助手的华为终端官方审核合规实战指南与代码模板库。
+>
+> 📅 **最后更新 / Last Updated**: 2026-09-10
 
 ---
 
@@ -90,7 +96,8 @@ huawei-app-review/
 ├── SKILL.md                  ← 核心指南：审核标准、红线自检与提审 Checklist
 ├── install.sh                ← 跨 AI CLI 一键安装部署脚本
 ├── LICENSE                   ← MIT 开源许可证
-├── README.md                 ← 项目使用说明
+├── README.md                 ← 中文说明文档
+├── README_en.md              ← English Documentation
 └── references/
     └── privacy-and-permissions-template.md  ← 生产级 ArkTS 代码范式（隐私弹窗、双清单、混淆规则）
 ```
