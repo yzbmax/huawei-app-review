@@ -89,6 +89,21 @@ if [ -d "$HOME/.cursor" ] || command -v cursor >/dev/null 2>&1; then
   link_to "$HOME/.cursor/skills/huawei-app-review" "Cursor"
 fi
 
+# === Windsurf ===
+if [ -d "$HOME/.codeium/windsurf" ] || [ -d "$HOME/.windsurf" ] || command -v windsurf >/dev/null 2>&1; then
+  link_to "$HOME/.codeium/windsurf/skills/huawei-app-review" "Windsurf"
+fi
+
+# === Trae ===
+if [ -d "$HOME/.trae" ] || command -v trae >/dev/null 2>&1; then
+  link_to "$HOME/.trae/skills/huawei-app-review" "Trae"
+fi
+
+# === Cline ===
+if [ -d "$HOME/.cline" ]; then
+  link_to "$HOME/.cline/skills/huawei-app-review" "Cline"
+fi
+
 echo ""
 log "huawei-app-review 安装完成！(新增/更新: ${INSTALLED}, 已就绪: ${SKIPPED})"
 echo ">> 技能根目录: ${SKILL_DIR}"

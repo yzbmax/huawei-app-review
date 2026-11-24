@@ -7,7 +7,7 @@
 **Huawei AppGallery Review & Compliance Skill for AI Coding Assistants**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=flat-square)](LICENSE)
-[![HarmonyOS](https://img.shields.io/badge/HarmonyOS-NEXT%20%2F%206.x%20%2F%207.x-c0272d?style=flat-square)](https://developer.huawei.com/)
+[![HarmonyOS](https://img.shields.io/badge/HarmonyOS-NEXT%20%2F%205.x%20%2F%206.x-c0272d?style=flat-square)](https://developer.huawei.com/)
 [![Language](https://img.shields.io/badge/Language-ArkTS%20%2F%20Stage%20Model-007acc?style=flat-square)](https://developer.huawei.com/)
 [![API](https://img.shields.io/badge/API-12%20--%2026-orange?style=flat-square)](https://developer.huawei.com/)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://github.com/yzbmax/huawei-app-review/pulls)
@@ -15,7 +15,7 @@
 > **Ensure AI coding assistants avoid all Huawei AppGallery review rejections on day one of writing HarmonyOS code.**
 > A production-ready compliance skill and code template library for Claude Code, Cursor, Gemini CLI, Antigravity, and other AI agents.
 >
-> 📅 **Last Updated**: 2026-09-10
+> 📅 **Last Updated**: 2026-11-24
 
 ---
 
@@ -23,12 +23,13 @@
 
 In HarmonyOS NEXT (pure HarmonyOS) app development, **more than 60% of new applications fail their initial review on Huawei AppGallery**. When AI assistants lack domain-specific compliance awareness, they frequently introduce critical compliance hazards:
 
-- ❌ **Premature Data Collection**: Initializing third-party SDKs or fetching device identifiers (OAID/AAID/Clipboard) before the user explicitly agrees to the privacy policy, triggering automated security audit rejections.
-- ❌ **Batch / Early Permission Requests**: Bombarding users with Camera, Microphone, or Location permission dialogs upon `EntryAbility` launch, violating the "dynamic minimization" rule.
-- ❌ **Missing Privacy "Double-Checklists"**: Omitting mandatory "Collected Personal Information List" and "Third-Party Data Sharing List" in secondary menus.
+- ❌ **Premature Data Collection**: Initializing third-party SDKs or fetching device identifiers (OAID/AAID/Clipboard) before explicit user agreement to the privacy policy, triggering automated security audit rejections.
+- ❌ **Over-Requesting Permissions instead of Security Components**: Requesting coarse/fine-grained permissions when official system security components (`SaveButton`, `PhotoViewPicker`, `PasteButton`, `LocationButton`) could achieve the task without permission popups.
+- ❌ **Missing Privacy "Double-Checklists" & Revocation**: Omitting mandatory "Collected Personal Information List" and "Third-Party Data Sharing List" in secondary menus, or lacking a simple "Revoke Privacy Consent" mechanism.
+- ❌ **Recent Tasks List Inconsistency**: App icon or name displaying default package name, placeholder icon, or blank space when running in the background/recent tasks overview.
+- ❌ **Cross-Platform Feature Degradation**: Releasing a severely reduced or placeholder version on HarmonyOS when full-featured versions exist on Android/iOS.
 - ❌ **Third-Party Login Without Huawei ID**: Integrating WeChat or QQ login without simultaneously providing Huawei Account Kit login.
-- ❌ **Submitting Debuggable Packages**: Failing to disable `debuggable: true` in Release builds.
-- ❌ **Placeholder & Half-Baked Features**: Submitting unhandled empty states, non-responsive buttons, or placeholder screens labeled "Coming Soon".
+- ❌ **Submitting Debuggable Packages**: Failing to disable `debuggable: true` or failing to enable code obfuscation in Release builds.
 
 **With this Skill enabled**: Your AI assistant proactively validates code against the official *Huawei AppGallery Review Guidelines* across architecture, UI design, permission declarations, and release packaging—guaranteeing 100% rejection-free builds.
 
@@ -36,14 +37,16 @@ In HarmonyOS NEXT (pure HarmonyOS) app development, **more than 60% of new appli
 
 ## ✨ Key Features
 
-- 🚨 **TOP 10 Review Red Lines**: High-frequency rejection points including MIIT ICP filing, Privacy Dialog 3-Elements, Zero-Invocation Rule, and auto-renewal disclosures.
-- 📖 **Complete 13-Section Audit Scope**: Metadata, system specifications, code stability, UGC moderation, ad interactions, minor protection, AI generative watermarks, and prohibited categories.
+- 🚨 **TOP 10 Review Red Lines**: High-frequency rejection points including MIIT HarmonyOS ICP filing, Privacy Dialog 3-Elements, Security Component prioritization, Zero-Invocation Rule, and auto-renewal disclosures.
+- 📖 **Complete 13-Section Audit Scope**: Metadata (annual 2-change name limit, recent tasks consistency), security rules (zero hot-reloading/hot-fixing, clipboard probe interception), quality standards, UGC moderation, ad interactions (splash screen skip buttons & anti-misclick shake settings), generative AI dual-marking (explicit watermark + implicit metadata), and prohibited categories.
 - 💻 **Production-Ready ArkTS Templates**:
   - Fully compliant **First-Launch Privacy Agreement Dialog** with strict non-agreement lifecycle gating.
-  - Drop-in **Personal Information Double-Checklist Component (`DoubleListDialog`)**.
+  - **Privacy Consent Revocation Manager (`PrivacyConsentManager`)** for clean state rollback.
+  - Drop-in **System Security Components** (`SaveButton`, `PhotoViewPicker`, `PasteButton`, `LocationButton`).
+  - Drop-in **Personal Information Double-Checklist Component (`PersonalInfoDoubleList`)**.
   - Standardized **Permission `reason` specifications** for `module.json5` and `string.json`.
   - Release-ready **`obfuscation-rules.txt`** that protects NAPI/Native bindings from symbol mangling.
-- 📋 **Pre-Flight Release Checklist**: 13 essential check items to verify before clicking "Submit for Review".
+- 📋 **Pre-Flight Release Checklist**: 16 essential check items to verify before clicking "Submit for Review".
 
 ---
 
@@ -51,11 +54,14 @@ In HarmonyOS NEXT (pure HarmonyOS) app development, **more than 60% of new appli
 
 ### Method 1: Automated One-Line Install (Recommended)
 
-Run the following command in your terminal. The script automatically detects installed AI CLIs (Claude Code, Cursor, Gemini CLI, Antigravity) and creates symlinks:
-
-```bash
-curl -fsSL https://raw.githubusercontent.com/yzbmax/huawei-app-review/main/install.sh | bash
-```
+* **Linux / macOS**:
+  ```bash
+  curl -fsSL https://raw.githubusercontent.com/yzbmax/huawei-app-review/main/install.sh | bash
+  ```
+* **Windows (PowerShell)**:
+  ```powershell
+  irm https://raw.githubusercontent.com/yzbmax/huawei-app-review/main/install.ps1 | iex
+  ```
 
 ### Method 2: Manual Clone & Setup
 
@@ -94,37 +100,38 @@ bash install.sh
 ```text
 huawei-app-review/
 ├── SKILL.md                  ← Master guideline: review rules, red-lines, and checklist
-├── install.sh                ← Multi-CLI one-click installer script
+├── install.sh                ← Linux/macOS multi-CLI one-click installer script
+├── install.ps1               ← Windows PowerShell multi-CLI one-click installer script
 ├── LICENSE                   ← MIT License
 ├── README.md                 ← Simplified Chinese documentation
 ├── README_en.md              ← English documentation
 └── references/
-    └── privacy-and-permissions-template.md  ← Production ArkTS templates (Dialogs, checklists, obfuscation)
+    └── privacy-and-permissions-template.md  ← Production ArkTS patterns (Security components, Privacy dialog, Revocation, Double list, Obfuscation)
 ```
 
 ---
 
 ## 🛡️ TOP 10 Review Red Lines Preview
 
-| No. | Rejection Cause | Core Rule & Compliance Action |
+| No. | Rejection Cause | Core Rule & Avoidance Guide |
 |---|---|---|
-| **1** | **Unregistered App / Missing ICP** | Complete mandatory MIIT APP filing before release; unapproved apps cannot pass review. |
-| **2** | **Privacy Dialog Violations** | Must display explicit dialog on first launch with distinct "Agree" and "Decline" buttons; **never pre-check agreements**; **strictly zero data/SDK calls prior to consent**. |
-| **3** | **Excessive / Early Permissions** | Apply dynamic minimization; never batch-request permissions upon app start; declining must not exit the app; define clear, granular `reason` strings. |
-| **4** | **Missing Privacy "Double-Checklist"** | Secondary menus must provide an **Itemized Collected Info List** and a **Third-Party Data Sharing List**. |
-| **5** | **No Account Deletion / Revocation** | Must provide an easy privacy revocation entry and account cancellation service (commitment SLA $\le$ 15 business days). |
-| **6** | **Third-Party Login Without Huawei ID** | If offering WeChat, QQ, or other third-party logins, **Huawei Account Kit MUST be simultaneously provided**. |
-| **7** | **Uncloseable / Accidental Ads** | Prominently label "Ad"; provide an immediate, delay-free close "X" button; **never combine shake-to-open and swipe-to-open on the same ad slot**. |
-| **8** | **Deceptive Auto-Renewals** | Clearly disclose subscription pricing and recurring intervals; offer a one-time purchase alternative; **actively notify user 5 days prior to auto-renewal**. |
-| **9** | **Functional Defects & Incomplete UI** | Strictly avoid crash-on-launch, white-screen, or UI clipping; ensure all clickable elements respond; never ship unfinished features or empty states; Release build must be non-debuggable. |
-| **10** | **Low-Quality Wrappers & Clones** | Webview-only wrappers or single-image apps with no unique functionality will be rejected immediately. |
+| **1** | **App ICP Unapproved** | Complete MIIT ICP filing early; native HarmonyOS apps must select "HarmonyOS" platform. |
+| **2** | **Privacy Dialog Violation** | Explicit Agree and Disagree buttons required; no default pre-checks; strictly zero SDK data collection before user agreement. |
+| **3** | **Excessive Permissions / Missing Security Components** | Dynamic on-demand permission requests only. **Always prioritize system Security Components (`SaveButton`/`PhotoViewPicker`/`PasteButton`/`LocationButton`)**; provide demo video when applying for restricted ACL permissions. |
+| **4** | **Missing Privacy "Double-Checklists"** | Mandatory "Collected Personal Information List" & "Third-Party Data Sharing List" in secondary menus. |
+| **5** | **Missing Account Deletion or Consent Revocation** | Provide clear revocation and deletion entry points with processing within 15 business days; handle post-revocation states gracefully. |
+| **6** | **Third-Party Login Without Huawei ID** | Must offer Huawei Account Kit login if third-party login (WeChat/QQ) is supported. |
+| **7** | **Uncloseable / Misleading Ads** | Clear "Ad" tag; effective splash skip button auto-advancing after timer; strictly no simultaneous "shake + swipe" on the same ad slot. |
+| **8** | **Deceptive Auto-Renewal** | Explicit pricing and intervals; provide single-purchase option; notify user at least 5 days prior to auto-renewal. |
+| **9** | **Functional Defects & Feature Degradation** | No launch crashes/white screens; submit signed Release packages; HarmonyOS version functionality must not be inferior to Android/iOS counterparts. |
+| **10** | **Homogenized / Saturated Shell Apps** | Pure web wrappers or single-image apps prohibited; saturated categories without unique innovative experience will be directly rejected. |
 
 ---
 
 ## 🤝 Contributing
 
-Huawei AppGallery review standards continuously evolve with regulatory policies and HarmonyOS API releases. Contributions, issue reports, and template improvements are warmly welcomed!
+Huawei AppGallery review specifications evolve alongside regulations and HarmonyOS system releases. PRs and Issues sharing real-world compliance insights and code templates are warmly welcome!
 
 ## 📄 License
 
-This project is licensed under the [MIT License](LICENSE).
+Distributed under the [MIT License](LICENSE).
